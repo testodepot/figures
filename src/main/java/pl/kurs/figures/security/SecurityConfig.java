@@ -17,7 +17,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         auth.inMemoryAuthentication()
-                .withUser("adam").password(encoder.encode("123")).roles("ADMIN")
+                .withUser("adam").password(encoder.encode("123")).roles("CREATOR")
                 .and()
                 .withUser("slon").password(encoder.encode("123")).roles("USER");
     }
@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().and().authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/v1/shapes").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.POST, "/api/v1/shapes").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/v1/shapes").hasRole("CREATOR")
                 .anyRequest().authenticated()
                 .and().csrf().disable().httpBasic();
     }
