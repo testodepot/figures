@@ -1,11 +1,15 @@
 package pl.kurs.figures.model;
 
-import javax.persistence.*;
+import org.springframework.stereotype.Component;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 
 @Entity
 @DiscriminatorValue(value = "Square")
-public class Square extends AbstractFigure implements Figure {
+@Component("Square")
+public class Square extends AbstractFigure implements Figure{
 
     private BigDecimal side;
 
@@ -28,6 +32,7 @@ public class Square extends AbstractFigure implements Figure {
     public BigDecimal calculateArea() {
         return side.multiply(side);
     }
+
 
     public BigDecimal getSide() {
         return side;

@@ -1,6 +1,7 @@
 package pl.kurs.figures.model;
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 
 @Entity
@@ -49,4 +50,5 @@ public class Rectangle extends AbstractFigure implements Figure {
     public void setWidth(BigDecimal width) {
         this.width = width;
     }
+
 }

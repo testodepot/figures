@@ -5,8 +5,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.exception.BadEntityException;
-import java.lang.reflect.Constructor;
-import java.math.BigDecimal;
+import pl.kurs.figures.strategy.Strategy;
+import pl.kurs.figures.strategy.StrategyFactory;
+import pl.kurs.figures.strategy.StrategyName;
+
 import java.util.List;
 
 @Component
@@ -15,44 +17,24 @@ public class ObjectMaker {
     @Value("${figures}")
     private List<String> figures;
 
-    public ObjectMaker(List<String> figures) {
+    private StrategyFactory strategyFactory;
+
+    public ObjectMaker(List<String> figures, StrategyFactory strategyFactory) {
         this.figures = figures;
+        this.strategyFactory = strategyFactory;
     }
 
     public Object makeObject(CreateFigureCommand createFigureCommand) {
+
         boolean isCorrect = checkIfFigureIsCorrect(StringUtils.capitalize(createFigureCommand.getType()));
-        try  {
-            if (isCorrect) {
 
-                if (createFigureCommand.getParameters().size() == 1) {
-                    Class clazz = Class.forName("pl.kurs.figures.model." + StringUtils.capitalize(createFigureCommand.getType()));
-                    Class[] parameters = new Class[]{BigDecimal.class};
-                    Constructor constructor = clazz.getConstructor(parameters);
-                    Object o = constructor.newInstance(createFigureCommand.getParameters().get(0));
-                    return o;
-                }
-
-                if (createFigureCommand.getParameters().size() == 2) {
-                    Class clazz = Class.forName("pl.kurs.figures.model." + StringUtils.capitalize(createFigureCommand.getType()));
-                    Class[] parameters = new Class[]{BigDecimal.class, BigDecimal.class};
-                    Constructor constructor = clazz.getConstructor(parameters);
-                    Object o = constructor.newInstance(createFigureCommand.getParameters().get(0), createFigureCommand.getParameters().get(1));
-                    return o;
-                }
-
-                if (createFigureCommand.getParameters().size() == 3) {
-                    Class clazz = Class.forName("pl.kurs.figures.model." + StringUtils.capitalize(createFigureCommand.getType()));
-                    Class[] parameters = new Class[]{BigDecimal.class, BigDecimal.class, BigDecimal.class};
-                    Constructor constructor = clazz.getConstructor(parameters);
-                    Object o = constructor.newInstance(createFigureCommand.getParameters().get(0), createFigureCommand.getParameters().get(1), createFigureCommand.getParameters().get(2));
-                    return o;
-                }
-
-            }
-        } catch (Exception e) {
-            throw new BadEntityException("No figure model of this type! Available types: " + figures);
+        if (isCorrect) {
+            StrategyName strategyName = StrategyName.valueOf(StringUtils.capitalize(createFigureCommand.getType()));
+            Strategy strategy = strategyFactory.findStrategy(strategyName);
+            return strategy.createFigure(StringUtils.capitalize(createFigureCommand.getType()), createFigureCommand.getParameters());
         }
-        throw new BadEntityException("No figure model of this type! Available types: " + figures);
+        else
+            throw new BadEntityException("No figure model of this type! Available types: " + figures);
     }
 
     public boolean checkIfFigureIsCorrect(String figureType) {

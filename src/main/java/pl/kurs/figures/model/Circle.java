@@ -1,7 +1,8 @@
 package pl.kurs.figures.model;
 
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 
 @Entity
@@ -33,4 +34,12 @@ public class Circle extends AbstractFigure implements Figure {
     }
 
 
+
+    public Circle createCircle(BigDecimal radius) {
+        Circle circle = new Circle(radius);
+        circle.setPerimeter(calculatePerimeter());
+        circle.setArea(calculateArea());
+        circle.setType("Circle");
+        return circle;
+    }
 }

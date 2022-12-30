@@ -14,6 +14,7 @@ import pl.kurs.figures.dto.FigureDto;
 import pl.kurs.figures.model.AbstractFigure;
 import pl.kurs.figures.service.AbstractFigureService;
 import pl.kurs.figures.specs.*;
+
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -32,7 +33,7 @@ public class FigureController {
     }
 
     @PostMapping
-    public ResponseEntity<FigureDto> addFigure(@RequestBody @Valid CreateFigureCommand createFigureCommand) throws ClassNotFoundException {
+    public ResponseEntity<FigureDto> addFigure(@RequestBody @Valid CreateFigureCommand createFigureCommand) throws IllegalAccessException, InstantiationException {
         Object figure = abstractFigureService.createSpecificFigure(createFigureCommand);
         long millis = System.currentTimeMillis();
         AbstractFigure preSavedFigure = modelMapper.map(figure, AbstractFigure.class);
