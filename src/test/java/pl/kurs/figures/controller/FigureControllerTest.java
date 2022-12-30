@@ -49,7 +49,7 @@ public class FigureControllerTest {
 
 
     @Test
-    @WithMockUser(username = "adam", password = "123", roles = "ADMIN")
+    @WithMockUser(username = "adam", password = "123", roles = {"ADMIN", "CREATOR"})
     public void addFigureTest() throws Exception {
 
         Circle circle = new Circle(BigDecimal.valueOf(25));
@@ -73,7 +73,7 @@ public class FigureControllerTest {
 
 
     @Test
-    @WithMockUser(username = "adam", password = "123", roles = "ADMIN")
+    @WithMockUser(username = "adam", password = "123", roles = {"ADMIN", "CREATOR"})
     public void addFigureTestWrongTypeOfFigureShouldFail() throws Exception {
 
         Circle circle = new Circle(BigDecimal.valueOf(25));
@@ -96,7 +96,7 @@ public class FigureControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "adam", password = "123", roles = "ADMIN")
+    @WithMockUser(username = "adam", password = "123", roles = {"ADMIN", "CREATOR"})
     public void addFigureTestWrongTypeOfFigureNumberShouldFail() throws Exception {
 
         Circle circle = new Circle(BigDecimal.valueOf(25));
@@ -119,7 +119,7 @@ public class FigureControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "adam", password = "123", roles = "ADMIN")
+    @WithMockUser(username = "adam", password = "123", roles = {"ADMIN", "CREATOR"})
     public void addFigureTestWrongTypeOfParamsForSpecificFigureShouldFail() throws Exception {
 
         Circle circle = new Circle(BigDecimal.valueOf(25));
@@ -143,7 +143,7 @@ public class FigureControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "adam", password = "123", roles = "ADMIN")
+    @WithMockUser(username = "adam", password = "123", roles = {"ADMIN", "CREATOR"})
     public void addFigureTestWrongTypeOfParamShouldFail() throws Exception {
 
         Circle circle = new Circle(BigDecimal.valueOf(25));
@@ -167,7 +167,7 @@ public class FigureControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "adam", password = "123", roles = "ADMIN")
+    @WithMockUser(username = "adam", password = "123", roles = {"ADMIN", "CREATOR"})
     public void addFigureTestEmptyListOfParamsShouldFail() throws Exception {
 
         Circle circle = new Circle(BigDecimal.valueOf(25));
@@ -193,7 +193,7 @@ public class FigureControllerTest {
 
 
     @Test
-    @WithMockUser(username = "adam", password = "123", roles = "ADMIN")
+    @WithMockUser(username = "adam", password = "123", roles = {"ADMIN", "CREATOR"})
     public void searchFigureTest() throws Exception {
 
         List<AbstractFigure> figures = new ArrayList<>();
