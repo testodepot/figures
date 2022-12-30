@@ -22,7 +22,7 @@ public class CreateRectangle implements Strategy {
     }
 
     @Override
-    public StrategyName getStrategyName() {
-        return StrategyName.Rectangle;
+    public String getStrategyName() {
+        return "Rectangle";
     }
 }

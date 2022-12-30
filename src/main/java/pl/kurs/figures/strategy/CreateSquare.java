@@ -23,7 +23,7 @@ public class CreateSquare implements Strategy {
 
 
     @Override
-    public StrategyName getStrategyName() {
-        return StrategyName.Square;
+    public String getStrategyName() {
+        return "Square";
     }
 }

@@ -9,20 +9,20 @@ import java.util.Set;
 @Component
 public class StrategyFactory {
 
-    private Map<StrategyName, Strategy> strategies;
+    private Map<String, Strategy> strategies;
 
     public StrategyFactory(Set<Strategy> strategySet) {
         createStrategy(strategySet);
     }
 
     private void createStrategy(Set<Strategy> strategySet) {
-        strategies = new HashMap<StrategyName, Strategy>();
+        strategies = new HashMap<String, Strategy>();
         strategySet
                 .forEach(strategy -> strategies.put(strategy.getStrategyName(), strategy));
     }
 
-    public Strategy findStrategy(StrategyName strategyName) {
-        return strategies.get(strategyName);
+    public Strategy findStrategy(String figureType) {
+        return strategies.get(figureType);
     }
 
 

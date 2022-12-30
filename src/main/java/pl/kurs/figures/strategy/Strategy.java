@@ -8,5 +8,5 @@ import java.util.List;
 public interface Strategy {
 
     AbstractFigure createFigure(String type, List<BigDecimal> params);
-    StrategyName getStrategyName();
+    String getStrategyName();
 }

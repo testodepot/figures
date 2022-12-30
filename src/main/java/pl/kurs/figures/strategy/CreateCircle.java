@@ -23,7 +23,7 @@ public class CreateCircle implements Strategy {
     }
 
     @Override
-    public StrategyName getStrategyName() {
-        return StrategyName.Circle;
+    public String getStrategyName() {
+        return "Circle";
     }
 }

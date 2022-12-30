@@ -7,7 +7,6 @@ import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.exception.BadEntityException;
 import pl.kurs.figures.strategy.Strategy;
 import pl.kurs.figures.strategy.StrategyFactory;
-import pl.kurs.figures.strategy.StrategyName;
 
 import java.util.List;
 
@@ -25,12 +24,10 @@ public class ObjectMaker {
     }
 
     public Object makeObject(CreateFigureCommand createFigureCommand) {
-
         boolean isCorrect = checkIfFigureIsCorrect(StringUtils.capitalize(createFigureCommand.getType()));
-
         if (isCorrect) {
-            StrategyName strategyName = StrategyName.valueOf(StringUtils.capitalize(createFigureCommand.getType()));
-            Strategy strategy = strategyFactory.findStrategy(strategyName);
+            String figureType = StringUtils.capitalize(createFigureCommand.getType());
+            Strategy strategy = strategyFactory.findStrategy(figureType);
             return strategy.createFigure(StringUtils.capitalize(createFigureCommand.getType()), createFigureCommand.getParameters());
         }
         else

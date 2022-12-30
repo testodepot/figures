@@ -26,7 +26,7 @@ public class AbstractFigureService {
 
     public Page<AbstractFigure> findAll(Specification<AbstractFigure> booleanExpression, Pageable pageable) {return repository.findAll(booleanExpression, pageable);}
 
-    public Object createSpecificFigure(CreateFigureCommand createFigureCommand) throws InstantiationException, IllegalAccessException {
+    public Object createSpecificFigure(CreateFigureCommand createFigureCommand) {
         return objectMaker.makeObject(createFigureCommand);
     }
 
