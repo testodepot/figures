@@ -3,10 +3,9 @@ package pl.kurs.figures.specs;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 import pl.kurs.figures.model.AbstractFigure;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import pl.kurs.figures.model.AbstractFigureView;
+
+import javax.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +22,9 @@ public class AbstractFigureWithPerimeterTo implements Specification<AbstractFigu
     @Override
     public Predicate toPredicate(Root<AbstractFigure> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
+        Join<AbstractFigure, AbstractFigureView> figures = root.join("abstractFigureView");
         if (perimeterTo != null) {
-            Predicate area = criteriaBuilder.lessThanOrEqualTo(root.get("perimeter"), perimeterTo);
+            Predicate area = criteriaBuilder.lessThanOrEqualTo(figures.get("perimeter"), perimeterTo);
             predicates.add(area);
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

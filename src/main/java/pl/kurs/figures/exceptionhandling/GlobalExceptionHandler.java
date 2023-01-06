@@ -9,6 +9,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.kurs.figures.exception.BadEntityException;
+import pl.kurs.figures.exception.EntityNotFoundException;
+import pl.kurs.figures.exception.NoPermissionException;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,20 @@ public class GlobalExceptionHandler {
         ExceptionResponseBadEntity response = new ExceptionResponseBadEntity(e.getMessage(), HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ExceptionResponseNotFound> handleEntityNotFoundException(EntityNotFoundException e) {
+        ExceptionResponseNotFound response = new ExceptionResponseNotFound(HttpStatus.NOT_FOUND.toString(), LocalDateTime.now(), e.getEntity(), e.getIdNotFound());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(NoPermissionException.class)
+    public ResponseEntity<ExceptionResponseBadEntity> handleEntityNotFoundException(NoPermissionException e) {
+        ExceptionResponseBadEntity response = new ExceptionResponseBadEntity(e.getMessage(), HttpStatus.FORBIDDEN.toString(), LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+
 
     @ExceptionHandler({HttpMessageNotReadableException.class})
     public ResponseEntity<List<ExceptionResponseHttpMessageNotReadable>> handleValidationException(HttpMessageNotReadableException e) {

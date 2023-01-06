@@ -1,48 +1,38 @@
 package pl.kurs.figures.service;
 
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pl.kurs.figures.command.CreateFigureCommand;
-import pl.kurs.figures.exception.BadEntityException;
-import pl.kurs.figures.strategy.Strategy;
-import pl.kurs.figures.strategy.StrategyFactory;
+import pl.kurs.figures.strategy.CreatingStrategy;
+import pl.kurs.figures.strategy.CreatingStrategyFactory;
 
+import java.math.BigDecimal;
 import java.util.List;
+
 
 @Component
 public class ObjectMaker {
 
-    @Value("${figures}")
-    private List<String> figures;
 
-    private StrategyFactory strategyFactory;
+    private CreatingStrategyFactory creatingStrategyFactory;
 
-    public ObjectMaker(List<String> figures, StrategyFactory strategyFactory) {
-        this.figures = figures;
-        this.strategyFactory = strategyFactory;
+
+    public ObjectMaker(CreatingStrategyFactory creatingStrategyFactory) {
+        this.creatingStrategyFactory = creatingStrategyFactory;
     }
+
 
     public Object makeObject(CreateFigureCommand createFigureCommand) {
-        boolean isCorrect = checkIfFigureIsCorrect(StringUtils.capitalize(createFigureCommand.getType()));
-        if (isCorrect) {
-            String figureType = StringUtils.capitalize(createFigureCommand.getType());
-            Strategy strategy = strategyFactory.findStrategy(figureType);
-            return strategy.createFigure(StringUtils.capitalize(createFigureCommand.getType()), createFigureCommand.getParameters());
-        }
-        else
-            throw new BadEntityException("No figure model of this type! Available types: " + figures);
+        String figureType = StringUtils.capitalize(createFigureCommand.getType());
+        CreatingStrategy creatingStrategy = creatingStrategyFactory.findStrategy(figureType);
+        return creatingStrategy.createFigure(StringUtils.capitalize(createFigureCommand.getType()), createFigureCommand.getParameters());
     }
 
-    public boolean checkIfFigureIsCorrect(String figureType) {
-        return figures.contains(StringUtils.capitalize(figureType));
+    public Object makeObjectWithTypeAndParams(String type, List<BigDecimal> params) {
+        CreatingStrategy creatingStrategy = creatingStrategyFactory.findStrategy(type);
+        return creatingStrategy.createFigure(type, params);
     }
 
-    public List<String> getFigures() {
-        return figures;
-    }
 
-    public void setFigures(List<String> figures) {
-        this.figures = figures;
-    }
 }

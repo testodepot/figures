@@ -8,16 +8,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Component
-public class CreateCircle implements Strategy {
+public class CreateCircle implements CreatingStrategy {
 
 
     @Override
     public AbstractFigure createFigure(String type, List<BigDecimal> params) {
         Circle circle = new Circle(params.get(0));
-        BigDecimal area = circle.calculateArea();
-        BigDecimal perimeter = circle.calculatePerimeter();
-        circle.setArea(area);
-        circle.setPerimeter(perimeter);
         circle.setType("Circle");
         return circle;
     }

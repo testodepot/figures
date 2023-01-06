@@ -22,6 +22,21 @@ public class FigureDto {
 
     private double perimeter;
 
+    public FigureDto() {
+    }
+
+    public FigureDto(Long id, String type, Long version, String createdBy, Date createdAt, Date lastModifiedAt, String lastModifiedBy, double area, double perimeter) {
+        this.id = id;
+        this.type = type;
+        this.version = version;
+        this.createdBy = createdBy;
+        this.createdAt = createdAt;
+        this.lastModifiedAt = lastModifiedAt;
+        this.lastModifiedBy = lastModifiedBy;
+        this.area = area;
+        this.perimeter = perimeter;
+    }
+
     public Long getId() {
         return id;
     }

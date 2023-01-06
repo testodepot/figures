@@ -13,9 +13,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = CreateFigureCommandValidator.class)
 @Target({ FIELD, METHOD, PARAMETER, ANNOTATION_TYPE, TYPE_USE })
 @Retention(RUNTIME)
-public @interface CommandCheck {
+public @interface CreateCommandCheck {
 
-    String message() default "{bigdecimalcheck.message}";
+    String message() default "{createcommandcheck.message}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

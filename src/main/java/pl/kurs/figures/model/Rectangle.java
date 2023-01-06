@@ -1,12 +1,15 @@
 package pl.kurs.figures.model;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 
 @Entity
 @DiscriminatorValue(value = "Rectangle")
-public class Rectangle extends AbstractFigure implements Figure {
+@Audited
+public class Rectangle extends AbstractFigure {
 
     private BigDecimal length;
 
@@ -19,21 +22,7 @@ public class Rectangle extends AbstractFigure implements Figure {
     public Rectangle(BigDecimal length, BigDecimal width) {
         this.length = length;
         this.width = width;
-        this.setPerimeter(calculatePerimeter());
-        this.setArea(calculateArea());
-        this.setType("Rectangle");
     }
-
-    @Override
-    public BigDecimal calculatePerimeter() {
-        return width.multiply(BigDecimal.valueOf(2)).add(length.multiply(BigDecimal.valueOf(2)));
-    }
-
-    @Override
-    public BigDecimal calculateArea() {
-        return width.multiply(length);
-    }
-
 
     public BigDecimal getLength() {
         return length;

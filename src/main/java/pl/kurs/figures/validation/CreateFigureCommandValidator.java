@@ -5,27 +5,38 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.exception.BadEntityException;
+import pl.kurs.figures.strategy.CreatingStrategy;
+import pl.kurs.figures.strategy.CreatingStrategyFactory;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
-public class CreateFigureCommandValidator implements ConstraintValidator<CommandCheck, CreateFigureCommand> {
+public class CreateFigureCommandValidator implements ConstraintValidator<CreateCommandCheck, CreateFigureCommand> {
+
+    private CreatingStrategyFactory creatingStrategyFactory;
 
     @Value("${figures}")
     private List<String> figures;
 
-    public CreateFigureCommandValidator(List<String> figures) {
+    public CreateFigureCommandValidator(CreatingStrategyFactory creatingStrategyFactory, List<String> figures) {
+        this.creatingStrategyFactory = creatingStrategyFactory;
         this.figures = figures;
     }
 
     @Override
-    public boolean isValid(CreateFigureCommand createFigureCommand, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(CreateFigureCommand obj, ConstraintValidatorContext constraintValidatorContext) {
 
-        boolean contains = figures.contains(StringUtils.capitalize(createFigureCommand.getType()));
+        Map<String, CreatingStrategy> strategies = creatingStrategyFactory.getStrategies();
 
-        if (!contains) {
+        CreatingStrategy strategy = creatingStrategyFactory.findStrategy(StringUtils.capitalize(obj.getType()));
+
+        boolean isFigureTypeAvailable = strategies.containsValue(strategy);
+
+        if (!isFigureTypeAvailable) {
             String error = "not a accepted type of figure! Accepted types: " + figures;
             HibernateConstraintValidatorContext hibernateContext = constraintValidatorContext.unwrap(HibernateConstraintValidatorContext.class);
             hibernateContext.disableDefaultConstraintViolation();
@@ -36,10 +47,10 @@ public class CreateFigureCommandValidator implements ConstraintValidator<Command
             return false;
         }
 
-        int counter = countParamsForSpecificClass(createFigureCommand);
+        int counter = countParamsForSpecificClass(obj, strategies);
 
-        if (createFigureCommand.getParameters().size() != counter) {
-            String error = "wrong number of params for this figure type: " + createFigureCommand.getType();
+        if (obj.getParameters().size() != counter) {
+            String error = "wrong number of params for this figure type: " + obj.getType();
             HibernateConstraintValidatorContext hibernateContext = constraintValidatorContext.unwrap(HibernateConstraintValidatorContext.class);
             hibernateContext.disableDefaultConstraintViolation();
             hibernateContext
@@ -52,12 +63,12 @@ public class CreateFigureCommandValidator implements ConstraintValidator<Command
         return true;
     }
 
-    private int countParamsForSpecificClass(CreateFigureCommand createFigureCommand) {
+    private int countParamsForSpecificClass(CreateFigureCommand createFigureCommand, Map<String, CreatingStrategy> strategies) {
         Class<?> figureClass = null;
         try {
             figureClass = Class.forName("pl.kurs.figures.model." + StringUtils.capitalize(createFigureCommand.getType()));
         } catch (ClassNotFoundException e) {
-            throw new BadEntityException("not a accepted type of figure! Accepted types: " + figures);
+            throw new BadEntityException("not a accepted type of figure! Accepted types: " + strategies.values().toString());
         }
         Field[] fields = figureClass.getDeclaredFields();
         int counter = 0;

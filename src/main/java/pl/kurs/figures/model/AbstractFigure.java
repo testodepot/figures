@@ -1,19 +1,20 @@
 package pl.kurs.figures.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 @EntityListeners(AuditingEntityListener.class)
+@Audited
 public class AbstractFigure implements Serializable {
 
     @Id
@@ -27,9 +28,8 @@ public class AbstractFigure implements Serializable {
     private String type;
 
     @CreatedBy
-    @Column(name = "created_by")
+    @Column(name = "created_by", updatable = false)
     private String createdBy;
-
 
     @Column(name = "created_at", updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -45,21 +45,19 @@ public class AbstractFigure implements Serializable {
     @LastModifiedBy
     private String lastModifiedBy;
 
-    private BigDecimal area;
-
-    private BigDecimal perimeter;
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private AbstractFigureView abstractFigureView;
 
     public AbstractFigure() {
     }
 
-    public AbstractFigure(String type, String createdBy, Date createdAt, Date lastModifiedAt, String lastModifiedBy, BigDecimal area, BigDecimal perimeter) {
+    public AbstractFigure(Long version, String type, String createdBy, Date createdAt, Date lastModifiedAt, String lastModifiedBy) {
+        this.version = version;
         this.type = type;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
         this.lastModifiedAt = lastModifiedAt;
         this.lastModifiedBy = lastModifiedBy;
-        this.area = area;
-        this.perimeter = perimeter;
     }
 
     public Long getId() {
@@ -118,21 +116,11 @@ public class AbstractFigure implements Serializable {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public BigDecimal getArea() {
-        return area;
+    public AbstractFigureView getAbstractFigureView() {
+        return abstractFigureView;
     }
 
-    public void setArea(BigDecimal area) {
-        this.area = area;
+    public void setAbstractFigureView(AbstractFigureView abstractFigureView) {
+        this.abstractFigureView = abstractFigureView;
     }
-
-    public BigDecimal getPerimeter() {
-        return perimeter;
-    }
-
-    public void setPerimeter(BigDecimal perimeter) {
-        this.perimeter = perimeter;
-    }
-
-
 }
