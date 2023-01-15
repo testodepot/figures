@@ -2,20 +2,23 @@ package pl.kurs.figures.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.envers.Audited;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 @EntityListeners(AuditingEntityListener.class)
 @Audited
-public class AbstractFigure implements Serializable {
+public abstract class AbstractFigure implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +30,10 @@ public class AbstractFigure implements Serializable {
     @Column(insertable = false, updatable = false)
     private String type;
 
-    @CreatedBy
-    @Column(name = "created_by", updatable = false)
-    private String createdBy;
+
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @Audited(targetAuditMode = NOT_AUDITED)
+    private User createdBy;
 
     @Column(name = "created_at", updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -45,19 +49,51 @@ public class AbstractFigure implements Serializable {
     @LastModifiedBy
     private String lastModifiedBy;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private AbstractFigureView abstractFigureView;
+    @Transient
+    private BigDecimal area;
+
+    @Transient
+    private BigDecimal perimeter;
+
 
     public AbstractFigure() {
     }
 
-    public AbstractFigure(Long version, String type, String createdBy, Date createdAt, Date lastModifiedAt, String lastModifiedBy) {
+    public AbstractFigure(Long version, String type, User createdBy, Date createdAt, Date lastModifiedAt, String lastModifiedBy) {
         this.version = version;
         this.type = type;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
         this.lastModifiedAt = lastModifiedAt;
         this.lastModifiedBy = lastModifiedBy;
+    }
+
+
+    public abstract BigDecimal calculateAreaForFigure(List<BigDecimal> params);
+
+    public abstract BigDecimal calculatePerimeterForFigure(List<BigDecimal> params);
+
+    public abstract BigDecimal calculateAreaForFigureDto(AbstractFigure figure);
+
+    public abstract BigDecimal calculatePerimeterForFigureDto(AbstractFigure figure);
+
+    @PostLoad
+    public abstract void postLoad();
+
+    public BigDecimal getArea() {
+        return area;
+    }
+
+    public void setArea(BigDecimal area) {
+        this.area = area;
+    }
+
+    public BigDecimal getPerimeter() {
+        return perimeter;
+    }
+
+    public void setPerimeter(BigDecimal perimeter) {
+        this.perimeter = perimeter;
     }
 
     public Long getId() {
@@ -84,11 +120,12 @@ public class AbstractFigure implements Serializable {
         this.version = version;
     }
 
-    public String getCreatedBy() {
+
+    public User getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(String createdBy) {
+    public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -116,11 +153,4 @@ public class AbstractFigure implements Serializable {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public AbstractFigureView getAbstractFigureView() {
-        return abstractFigureView;
-    }
-
-    public void setAbstractFigureView(AbstractFigureView abstractFigureView) {
-        this.abstractFigureView = abstractFigureView;
-    }
 }

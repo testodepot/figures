@@ -1,9 +1,7 @@
 package pl.kurs.figures.validation;
 
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
-import org.springframework.util.StringUtils;
 import pl.kurs.figures.command.EditFigureCommand;
-import pl.kurs.figures.exception.BadEntityException;
 import pl.kurs.figures.model.AbstractFigure;
 import pl.kurs.figures.service.AbstractFigureService;
 import pl.kurs.figures.strategy.CreatingStrategy;
@@ -11,8 +9,6 @@ import pl.kurs.figures.strategy.CreatingStrategyFactory;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.util.Map;
 
 public class EditFigureCommandValidator implements ConstraintValidator<EditCommandCheck, EditFigureCommand> {
@@ -84,7 +80,7 @@ public class EditFigureCommandValidator implements ConstraintValidator<EditComma
             return false;
         }
 
-        int counter = countParamsForSpecificClass(strategies, byId);
+        int counter = strategy.getNumberOfParamsOfSpecificFigure();
 
         if (obj.getParameters().size() != counter) {
             String error = "wrong number of params for this figure type: " + byId.getType();
@@ -100,21 +96,4 @@ public class EditFigureCommandValidator implements ConstraintValidator<EditComma
         return true;
     }
 
-    private int countParamsForSpecificClass(Map<String, CreatingStrategy> strategies, AbstractFigure byId) {
-        Class<?> figureClass = null;
-
-        try {
-            figureClass = Class.forName("pl.kurs.figures.model." + StringUtils.capitalize(byId.getType()));
-        } catch (ClassNotFoundException e) {
-            throw new BadEntityException("not a accepted type of figure! Accepted types: " + strategies.values().toString());
-        }
-        Field[] fields = figureClass.getDeclaredFields();
-        int counter = 0;
-        for (Field f : fields) {
-            if (f.getType() == BigDecimal.class) {
-                counter = counter + 1;
-            }
-        }
-        return counter;
-    }
 }

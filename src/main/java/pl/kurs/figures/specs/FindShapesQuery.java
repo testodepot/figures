@@ -54,6 +54,7 @@ public class FindShapesQuery {
     @Nullable
     private BigDecimal sideTo;
 
+
     @Nullable
     public String getType() {
         return type;

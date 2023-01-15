@@ -1,15 +1,14 @@
 package pl.kurs.figures.service;
 
-
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pl.kurs.figures.command.CreateFigureCommand;
+import pl.kurs.figures.model.AbstractFigure;
 import pl.kurs.figures.strategy.CreatingStrategy;
 import pl.kurs.figures.strategy.CreatingStrategyFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 
 @Component
 public class ObjectMaker {
@@ -22,17 +21,15 @@ public class ObjectMaker {
         this.creatingStrategyFactory = creatingStrategyFactory;
     }
 
-
-    public Object makeObject(CreateFigureCommand createFigureCommand) {
+    public AbstractFigure makeObject(CreateFigureCommand createFigureCommand) {
         String figureType = StringUtils.capitalize(createFigureCommand.getType());
         CreatingStrategy creatingStrategy = creatingStrategyFactory.findStrategy(figureType);
         return creatingStrategy.createFigure(StringUtils.capitalize(createFigureCommand.getType()), createFigureCommand.getParameters());
     }
 
-    public Object makeObjectWithTypeAndParams(String type, List<BigDecimal> params) {
+    public AbstractFigure makeObjectWithTypeAndParams(String type, List<BigDecimal> params) {
         CreatingStrategy creatingStrategy = creatingStrategyFactory.findStrategy(type);
         return creatingStrategy.createFigure(type, params);
     }
-
 
 }

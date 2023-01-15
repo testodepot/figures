@@ -21,4 +21,9 @@ public class CreateRectangle implements CreatingStrategy {
     public String getStrategyName() {
         return "Rectangle";
     }
+
+    @Override
+    public int getNumberOfParamsOfSpecificFigure() {
+        return 2;
+    }
 }

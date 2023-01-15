@@ -6,10 +6,13 @@ public class AuthResponse {
 
     private String accessToken;
 
+    private String refreshToken;
 
-    public AuthResponse(String login, String accessToken) {
+
+    public AuthResponse(String login, String accessToken, String refreshToken) {
         this.login = login;
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 
     public String getLogin() {
@@ -28,4 +31,11 @@ public class AuthResponse {
         this.accessToken = accessToken;
     }
 
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }

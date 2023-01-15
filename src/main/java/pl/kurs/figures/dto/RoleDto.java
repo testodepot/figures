@@ -1,4 +1,4 @@
-package pl.kurs.figures.security;
+package pl.kurs.figures.dto;
 
 public class RoleDto {
 

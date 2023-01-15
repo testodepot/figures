@@ -13,17 +13,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import pl.kurs.figures.repository.UserRepository;
 
 import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity(debug = true)
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true, proxyTargetClass = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserRepository userRepo;
 
     private JwtTokenFilter jwtTokenFilter;
+
 
     public WebSecurityConfig(UserRepository userRepo, JwtTokenFilter jwtTokenFilter) {
         this.userRepo = userRepo;
@@ -36,6 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found.")));
     }
 
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -47,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/auth/login", "/api/v1/users").permitAll()
-                .antMatchers("/api/v1/shapes", "/api/v1/shapes/{id}" ).hasAnyAuthority("CREATOR")
+                .antMatchers("/api/v1/shapes", "/api/v1/shapes/{id}", "/auth/refresh" ).hasAnyAuthority("CREATOR", "ADMIN")
                 .anyRequest().authenticated();
 
 

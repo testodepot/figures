@@ -22,4 +22,9 @@ public class CreateSquare implements CreatingStrategy {
     public String getStrategyName() {
         return "Square";
     }
+
+    @Override
+    public int getNumberOfParamsOfSpecificFigure() {
+        return 1;
+    }
 }

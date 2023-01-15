@@ -3,6 +3,7 @@ package pl.kurs.figures.exceptionhandling;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -62,7 +63,6 @@ public class GlobalExceptionHandler {
     }
 
 
-
     @ExceptionHandler({HttpMessageNotReadableException.class})
     public ResponseEntity<List<ExceptionResponseHttpMessageNotReadable>> handleValidationException(HttpMessageNotReadableException e) {
         List<ExceptionResponseHttpMessageNotReadable> list = new ArrayList<>();
@@ -71,8 +71,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(list, HttpStatus.BAD_REQUEST);
     }
 
-
-
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ExceptionResponseUsernameNotFoundException> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        ExceptionResponseUsernameNotFoundException response = new ExceptionResponseUsernameNotFoundException(e.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 
 
 

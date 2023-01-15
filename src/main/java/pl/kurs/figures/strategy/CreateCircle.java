@@ -22,4 +22,9 @@ public class CreateCircle implements CreatingStrategy {
     public String getStrategyName() {
         return "Circle";
     }
+
+    @Override
+    public int getNumberOfParamsOfSpecificFigure() {
+        return 1;
+    }
 }

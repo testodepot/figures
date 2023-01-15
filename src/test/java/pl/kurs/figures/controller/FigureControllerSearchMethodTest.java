@@ -8,21 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import pl.kurs.figures.model.Role;
+import pl.kurs.figures.model.User;
 import pl.kurs.figures.repository.AbstractFigureBaseRepository;
-import pl.kurs.figures.repository.AbstractFigureViewRepository;
-import pl.kurs.figures.security.JwtTokenUtil;
-import pl.kurs.figures.security.Role;
-import pl.kurs.figures.security.User;
 import pl.kurs.figures.service.AbstractFigureService;
-import pl.kurs.figures.service.AbstractFigureViewService;
 import pl.kurs.figures.service.ObjectMaker;
-import pl.kurs.figures.strategy.ComputingStrategyFactory;
+import pl.kurs.figures.utils.JwtTokenUtil;
 
 import javax.transaction.Transactional;
 import java.util.HashSet;
@@ -40,20 +39,13 @@ public class FigureControllerSearchMethodTest {
     @Autowired
     private AbstractFigureService abstractFigureService;
 
-    @Autowired
-    private AbstractFigureViewService abstractFigureViewService;
 
     @Autowired
     private AbstractFigureBaseRepository abstractFigureBaseRepository;
 
-    @Autowired
-    private AbstractFigureViewRepository abstractFigureViewRepository;
 
     @Autowired
     private ObjectMaker objectMaker;
-
-    @Autowired
-    private ComputingStrategyFactory computingStrategyFactory;
 
     @Mock
     private Authentication auth;
@@ -63,22 +55,28 @@ public class FigureControllerSearchMethodTest {
     @Autowired
     private JwtTokenUtil jwtUtil;
 
+    private String refreshToken;
+
+    @Autowired
+    private AuthenticationManager authManager;
+
     @BeforeEach
     public void setUp() {
         Mockito.when(auth.getName()).thenReturn("adam123");
         SecurityContextHolder.getContext().setAuthentication(auth);
         abstractFigureService = new AbstractFigureService(abstractFigureBaseRepository, objectMaker);
-        abstractFigureViewService = new AbstractFigureViewService(computingStrategyFactory, abstractFigureViewRepository);
+        User dummy = new User("adam", "kocik", "adam123", "123");
+        token = jwtUtil.generateAccessToken(dummy);
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(
+                dummy.getLogin(), dummy.getPassword()));
+        refreshToken = jwtUtil.generateRefreshToken(authentication);
     }
 
     @Test
     @Sql(statements = {
-            "INSERT INTO figures.view_abstract_figure values (1, 7850.00, 314.00)",
-            "INSERT INTO figures.abstract_figure values ('Circle', 1, '2023-01-05 20:26:12', 'adam123', '2023-01-05 20:26:12', 'adam123', 0, 50, null, null, null, 1)",
-            "INSERT INTO figures.view_abstract_figure values (2, 31400.00, 628.00)",
-            "INSERT INTO figures.abstract_figure values ('Circle', 2, '2023-01-04 20:26:12', 'adam123', '2023-01-04 20:26:12', 'adam123', 0, 100, null, null, null, 2)",
-            "INSERT INTO figures.view_abstract_figure values (3, 2500.00, 200.00)",
-            "INSERT INTO figures.abstract_figure values ('Square', 3, '2023-01-03 20:26:12', 'adam123', '2023-01-03 20:26:12', 'adam123', 0, null, null, null, 50, 3)",
+            "INSERT INTO figures.abstract_figure values ('Circle', 1, '2023-01-05 20:26:12', '2023-01-05 20:26:12', 'adam123', 0, 50, null, null, null, 1)",
+            "INSERT INTO figures.abstract_figure values ('Circle', 2, '2023-01-04 20:26:12', '2023-01-04 20:26:12', 'adam123', 0, 100, null, null, null, 1)",
+            "INSERT INTO figures.abstract_figure values ('Square', 3, '2023-01-03 20:26:12', '2023-01-03 20:26:12', 'adam123', 0, null, null, null, 50, 1)"
     })
     @Transactional
     public void searchFigureTestFindFigureByTypeAndArea() throws Exception {
@@ -102,12 +100,9 @@ public class FigureControllerSearchMethodTest {
 
     @Test
     @Sql(statements = {
-            "INSERT INTO figures.view_abstract_figure values (1, 7850.00, 314.00)",
-            "INSERT INTO figures.abstract_figure values ('Circle', 1, '2023-01-05 20:26:12', 'adam123', '2023-01-05 20:26:12', 'adam123', 0, 50, null, null, null, 1)",
-            "INSERT INTO figures.view_abstract_figure values (2, 31400.00, 628.00)",
-            "INSERT INTO figures.abstract_figure values ('Circle', 2, '2023-01-04 20:26:12', 'adam123', '2023-01-04 20:26:12', 'adam123', 0, 100, null, null, null, 2)",
-            "INSERT INTO figures.view_abstract_figure values (3, 2500.00, 200.00)",
-            "INSERT INTO figures.abstract_figure values ('Square', 3, '2023-01-03 20:26:12', 'adam123', '2023-01-03 20:26:12', 'adam123', 0, null, null, null, 50, 3)",
+            "INSERT INTO figures.abstract_figure values ('Circle', 1, '2023-01-05 20:26:12', '2023-01-05 20:26:12', 'adam123', 0, 50, null, null, null, 1)",
+            "INSERT INTO figures.abstract_figure values ('Circle', 2, '2023-01-04 20:26:12', '2023-01-04 20:26:12', 'adam123', 0, 100, null, null, null, 1)",
+            "INSERT INTO figures.abstract_figure values ('Square', 3, '2023-01-03 20:26:12', '2023-01-03 20:26:12', 'adam123', 0, null, null, null, 50, 1)",
     })
     @Transactional
     public void searchFigureTestFindFigureByDateAndType() throws Exception {
@@ -130,12 +125,9 @@ public class FigureControllerSearchMethodTest {
 
     @Test
     @Sql(statements = {
-            "INSERT INTO figures.view_abstract_figure values (1, 7850.00, 314.00)",
-            "INSERT INTO figures.abstract_figure values ('Circle', 1, '2023-01-05 20:26:12', 'adam123', '2023-01-05 20:26:12', 'adam123', 0, 50, null, null, null, 1)",
-            "INSERT INTO figures.view_abstract_figure values (2, 31400.00, 628.00)",
-            "INSERT INTO figures.abstract_figure values ('Circle', 2, '2023-01-04 20:26:12', 'adam123', '2023-01-04 20:26:12', 'adam123', 0, 100, null, null, null, 2)",
-            "INSERT INTO figures.view_abstract_figure values (3, 2500.00, 200.00)",
-            "INSERT INTO figures.abstract_figure values ('Square', 3, '2023-01-03 20:26:12', 'adam123', '2023-01-03 20:26:12', 'adam123', 0, null, null, null, 50, 3)",
+            "INSERT INTO figures.abstract_figure values ('Circle', 1, '2023-01-05 20:26:12', '2023-01-05 20:26:12', 'adam123', 0, 50, null, null, null, 1)",
+            "INSERT INTO figures.abstract_figure values ('Circle', 2, '2023-01-04 20:26:12', '2023-01-04 20:26:12', 'adam123', 0, 100, null, null, null, 1)",
+            "INSERT INTO figures.abstract_figure values ('Square', 3, '2023-01-03 20:26:12', '2023-01-03 20:26:12', 'adam123', 0, null, null, null, 50, 1)",
     })
     @Transactional
     public void searchFigureTestFindFigureByPerimeter() throws Exception {
@@ -148,7 +140,7 @@ public class FigureControllerSearchMethodTest {
         dummy.setRoles(userRoleSet);
         token = jwtUtil.generateAccessToken(dummy);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/shapes?perimeterFrom=250")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/shapes?perimeterFrom=200")
                 .with(user(dummy))
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))

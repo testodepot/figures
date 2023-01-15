@@ -9,4 +9,5 @@ public interface CreatingStrategy {
 
     AbstractFigure createFigure(String type, List<BigDecimal> params);
     String getStrategyName();
+    int getNumberOfParamsOfSpecificFigure();
 }

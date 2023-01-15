@@ -1,11 +1,9 @@
-package pl.kurs.figures.security;
+package pl.kurs.figures.model;
 
-import org.hibernate.annotations.Cascade;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.kurs.figures.model.AbstractFigure;
 
 import javax.persistence.*;
 import java.util.*;
@@ -32,7 +30,7 @@ public class User implements UserDetails {
     @Length(min = 3, max = 64)
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -40,8 +38,7 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_created_figures",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -98,7 +95,6 @@ public class User implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     public Set<AbstractFigure> getCreatedFigures() {
         return createdFigures;

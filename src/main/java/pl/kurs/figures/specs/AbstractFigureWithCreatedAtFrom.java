@@ -1,9 +1,9 @@
 package pl.kurs.figures.specs;
 
-
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 import pl.kurs.figures.model.AbstractFigure;
+
 import javax.persistence.criteria.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

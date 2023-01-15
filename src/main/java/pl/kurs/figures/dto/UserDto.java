@@ -1,6 +1,4 @@
-package pl.kurs.figures.security;
-
-import pl.kurs.figures.dto.FigureDto;
+package pl.kurs.figures.dto;
 
 import java.util.Set;
 
@@ -11,6 +9,7 @@ public class UserDto {
     private String password;
     private Set<RoleDto> roles;
     private Set<FigureDto> createdFigures;
+    private double amountOfCreatedFigures;
 
     public UserDto() {
     }
@@ -21,6 +20,15 @@ public class UserDto {
         this.password = password;
         this.roles = roles;
         this.createdFigures = createdFigures;
+        this.amountOfCreatedFigures = createdFigures.size();
+    }
+
+    public double getAmountOfCreatedFigures() {
+        return amountOfCreatedFigures;
+    }
+
+    public void setAmountOfCreatedFigures(double amountOfCreatedFigures) {
+        this.amountOfCreatedFigures = amountOfCreatedFigures;
     }
 
     public Integer getId() {

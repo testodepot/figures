@@ -1,4 +1,4 @@
-package pl.kurs.figures.security;
+package pl.kurs.figures.controller;
 
 
 import org.junit.jupiter.api.Test;
@@ -16,9 +16,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.kurs.figures.model.AbstractFigure;
-import pl.kurs.figures.model.AbstractFigureView;
+import pl.kurs.figures.model.Role;
 import pl.kurs.figures.model.Square;
-import pl.kurs.figures.service.AbstractFigureViewService;
+import pl.kurs.figures.model.User;
+import pl.kurs.figures.service.RoleService;
+import pl.kurs.figures.service.UserService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,8 +43,6 @@ public class UserControllerTest {
     @MockBean
     private RoleService roleService;
 
-    @MockBean
-    private AbstractFigureViewService abstractFigureViewService;
 
 
 
@@ -63,14 +63,9 @@ public class UserControllerTest {
         roleSet.add(newRole);
         newUser.setRoles(roleSet);
 
-        AbstractFigureView abstractFigureView = new AbstractFigureView();
-        abstractFigureView.setModelId(1L);
-        abstractFigureView.setPerimeter(BigDecimal.valueOf(320));
-        abstractFigureView.setArea(BigDecimal.valueOf(6400));
 
         Mockito.when(roleService.getRole(ArgumentMatchers.isA(String.class))).thenReturn(newRole);
         Mockito.when(userService.add(ArgumentMatchers.isA(User.class))).thenReturn(newUser);
-        Mockito.when(abstractFigureViewService.getById(ArgumentMatchers.isA(Long.class))).thenReturn(abstractFigureView);
 
         this.mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
                 .content("{\n" +
@@ -151,17 +146,9 @@ public class UserControllerTest {
         userList.add(newUser);
         PageImpl<User> userPage = new PageImpl<>(userList, PageRequest.of(5, 5), 5);
 
-
-        AbstractFigureView abstractFigureView = new AbstractFigureView();
-        abstractFigureView.setModelId(1L);
-        abstractFigureView.setPerimeter(BigDecimal.valueOf(320));
-        abstractFigureView.setArea(BigDecimal.valueOf(6400));
-
-
         Mockito.when(userService.findAllUsers(ArgumentMatchers.isA(Pageable.class))).thenReturn(userPage);
+        Mockito.when(userService.findByLogin(ArgumentMatchers.anyString())).thenReturn(newUser);
 
-
-        Mockito.when(abstractFigureViewService.getById(ArgumentMatchers.isA(long.class))).thenReturn(abstractFigureView);
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))

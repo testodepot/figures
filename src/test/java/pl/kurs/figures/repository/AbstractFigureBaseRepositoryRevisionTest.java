@@ -13,8 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import pl.kurs.figures.model.AbstractFigure;
-import pl.kurs.figures.model.AbstractFigureView;
 import pl.kurs.figures.model.Circle;
+import pl.kurs.figures.model.Role;
+import pl.kurs.figures.model.User;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -29,6 +30,9 @@ public class AbstractFigureBaseRepositoryRevisionTest {
 
     @Autowired
     private AbstractFigureBaseRepository abstractFigureBaseRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Mock
     private Authentication auth;
@@ -48,19 +52,17 @@ public class AbstractFigureBaseRepositoryRevisionTest {
         entityManager = entityManager.getEntityManagerFactory().createEntityManager();
         Session session = (Session) entityManager.unwrap(Session.class);
 
+        User newUser = new User("adam", "kocik", "adam123", "123");
+        Role creatorRole = new Role("CREATOR");
+        creatorRole.setId(1);
+        newUser.addRole(creatorRole);
         long millis = System.currentTimeMillis();
         Circle circle = new Circle(BigDecimal.valueOf(50));
         circle.setType("Circle");
         circle.setCreatedAt(new Date(millis));
         circle.setLastModifiedAt(new Date(millis));
-        circle.setCreatedBy("adam123");
+        circle.setCreatedBy(newUser);
         circle.setLastModifiedBy("adam123");
-
-
-        AbstractFigureView abstractFigureView = new AbstractFigureView();
-        abstractFigureView.setPerimeter(BigDecimal.valueOf(314));
-        abstractFigureView.setArea(BigDecimal.valueOf(7850));
-        circle.setAbstractFigureView(abstractFigureView);
 
         entityManager.getTransaction().begin();
         entityManager.persist(circle);
@@ -75,5 +77,6 @@ public class AbstractFigureBaseRepositoryRevisionTest {
 
         assertEquals(1, revisions.size());
         abstractFigureBaseRepository.deleteById(circle.getId());
+        userRepository.deleteById(circle.getCreatedBy().getId());
     }
 }

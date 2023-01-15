@@ -8,6 +8,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pl.kurs.figures.model.Role;
+import pl.kurs.figures.model.User;
+import pl.kurs.figures.utils.JwtTokenUtil;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -45,17 +48,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private boolean hasAuthorizationBearer(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
-        if (ObjectUtils.isEmpty(header) || !header.startsWith("Bearer")) {
-            return false;
-        }
-
-        return true;
+        return !ObjectUtils.isEmpty(header) && header.startsWith("Bearer");
     }
 
     private String getAccessToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
-        String token = header.split(" ")[1].trim();
-        return token;
+        return header.split(" ")[1].trim();
     }
 
     private void setAuthenticationContext(String token, HttpServletRequest request) {

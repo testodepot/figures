@@ -1,6 +1,7 @@
-package pl.kurs.figures.security;
+package pl.kurs.figures.command;
 
 import org.hibernate.validator.constraints.Length;
+import pl.kurs.figures.validation.CheckIfLoginNotTaken;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -10,6 +11,8 @@ public class CreateUserCommand {
 
     @NotBlank(message = "login cannot be blank or null!")
     @Length(max = 50, message = "login should not exceed 50 signs!")
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "login should contains only letters and numbers!")
+    @CheckIfLoginNotTaken
     private String login;
 
     @NotBlank(message = "name cannot be blank or null!")
