@@ -37,8 +37,7 @@ public class AuthService {
         User user = (User) authentication.getPrincipal();
         String accessToken = jwtUtil.generateAccessToken(user);
         String refreshToken = jwtUtil.generateRefreshToken(authentication);
-        AuthResponse response = new AuthResponse(user.getLogin(), accessToken, refreshToken);
-        return response;
+        return new AuthResponse(user.getLogin(), accessToken, refreshToken);
     }
 
     public RefreshJwtAuthenticationResponse refreshToken(String authRefreshToken) {
@@ -47,7 +46,6 @@ public class AuthService {
         User byLogin = userService.findByLogin(login);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(byLogin, byLogin.getPassword(), byLogin.getAuthorities());
         String accessJwtToken = jwtUtil.generateAccessToken((User) authentication.getPrincipal());
-        RefreshJwtAuthenticationResponse response = new RefreshJwtAuthenticationResponse(accessJwtToken);
-        return response;
+        return new RefreshJwtAuthenticationResponse(accessJwtToken);
     }
 }

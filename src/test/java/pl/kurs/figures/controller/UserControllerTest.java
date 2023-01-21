@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import pl.kurs.figures.dto.RoleDto;
+import pl.kurs.figures.dto.UserDto;
 import pl.kurs.figures.model.AbstractFigure;
 import pl.kurs.figures.model.Role;
 import pl.kurs.figures.model.Square;
@@ -144,10 +146,23 @@ public class UserControllerTest {
         newUser.setRoles(roleSet);
         List<User> userList = new ArrayList<>();
         userList.add(newUser);
-        PageImpl<User> userPage = new PageImpl<>(userList, PageRequest.of(5, 5), 5);
+        UserDto dto = new UserDto();
+        dto.setId(newUser.getId());
+        RoleDto roleDto = new RoleDto();
+        roleDto.setName(newRole.getName());
+        roleDto.setId(newRole.getId());
+        Set<RoleDto> roleDtoSet = new HashSet<>();
+        roleDtoSet.add(roleDto);
+        dto.setRoles(roleDtoSet);
+        dto.setCreatedFigures(new HashSet<>());
+        dto.setAmountOfCreatedFigures(0);
+        List<UserDto> userDtoList = new ArrayList<>();
+        userDtoList.add(dto);
+        PageImpl<UserDto> userDtoPage = new PageImpl<>(userDtoList, PageRequest.of(5, 5), userDtoList.size());
+        PageImpl<User> userPage = new PageImpl<>(userList, PageRequest.of(5, 5), userList.size());
 
         Mockito.when(userService.findAllUsers(ArgumentMatchers.isA(Pageable.class))).thenReturn(userPage);
-        Mockito.when(userService.findByLogin(ArgumentMatchers.anyString())).thenReturn(newUser);
+        Mockito.when(userService.mapPageUsersToDto(ArgumentMatchers.any())).thenReturn(userDtoPage);
 
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users")

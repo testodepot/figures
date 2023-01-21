@@ -6,7 +6,6 @@ import pl.kurs.figures.validation.CheckIfLoginNotTaken;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-
 public class CreateUserCommand {
 
     @NotBlank(message = "login cannot be blank or null!")

@@ -25,7 +25,7 @@ public class AuthController {
     }
 
     @GetMapping("/auth/refresh")
-    public ResponseEntity<?> refreshToken(@RequestHeader String refreshToken) throws Exception {
+    public ResponseEntity<?> refreshToken(@RequestHeader String refreshToken) {
         RefreshJwtAuthenticationResponse response = authService.refreshToken(refreshToken);
         return ResponseEntity.ok().body(response);
     }

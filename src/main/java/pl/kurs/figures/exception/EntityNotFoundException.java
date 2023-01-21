@@ -11,9 +11,6 @@ public class EntityNotFoundException extends RuntimeException {
         this.entity = entity;
     }
 
-    public EntityNotFoundException(String entity) {
-        this.entity = entity;
-    }
 
     public Long getIdNotFound() {
         return idNotFound;

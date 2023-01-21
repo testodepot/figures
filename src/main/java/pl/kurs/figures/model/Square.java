@@ -5,7 +5,6 @@ import org.hibernate.envers.Audited;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Entity
 @DiscriminatorValue(value = "Square")
@@ -23,32 +22,15 @@ public class Square extends AbstractFigure  {
 
 
     @Override
-    public BigDecimal calculateAreaForFigure(List<BigDecimal> params) {
-        return params.get(0).multiply(params.get(0));
+    public BigDecimal calculateAreaForFigure() {
+        return this.side.multiply(this.side);
     }
 
     @Override
-    public BigDecimal calculatePerimeterForFigure(List<BigDecimal> params) {
-        return params.get(0).multiply(BigDecimal.valueOf(4));
+    public BigDecimal calculatePerimeterForFigure() {
+        return this.side.multiply(BigDecimal.valueOf(4));
     }
 
-    @Override
-    public BigDecimal calculateAreaForFigureDto(AbstractFigure figure) {
-        Square square = (Square) figure;
-        return square.getSide().multiply(square.getSide());
-    }
-
-    @Override
-    public BigDecimal calculatePerimeterForFigureDto(AbstractFigure figure) {
-        Square square = (Square) figure;
-        return square.getSide().multiply(BigDecimal.valueOf(4));
-    }
-
-    @Override
-    public void postLoad() {
-        this.setArea(side.multiply(side));
-        this.setPerimeter(BigDecimal.valueOf(4).multiply(side));
-    }
 
     public BigDecimal getSide() {
         return side;

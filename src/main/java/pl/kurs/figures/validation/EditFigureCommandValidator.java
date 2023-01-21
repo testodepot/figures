@@ -50,14 +50,6 @@ public class EditFigureCommandValidator implements ConstraintValidator<EditComma
 
         boolean exists = abstractFigureService.existsById(obj.getIdFigure());
 
-        AbstractFigure byId = abstractFigureService.getById(obj.getIdFigure());
-
-        Map<String, CreatingStrategy> strategies = creatingStrategyFactory.getStrategies();
-
-        CreatingStrategy strategy = creatingStrategyFactory.findStrategy(byId.getType());
-
-        boolean isFigureTypeAvailable = strategies.containsValue(strategy);
-
         if (!exists) {
             String error = "no figure of this id!";
             HibernateConstraintValidatorContext hibernateContext = context.unwrap(HibernateConstraintValidatorContext.class);
@@ -68,6 +60,15 @@ public class EditFigureCommandValidator implements ConstraintValidator<EditComma
                     .addConstraintViolation();
             return false;
         }
+
+        AbstractFigure byId = abstractFigureService.getById(obj.getIdFigure());
+
+        Map<String, CreatingStrategy> strategies = creatingStrategyFactory.getStrategies();
+
+        CreatingStrategy strategy = creatingStrategyFactory.findStrategy(byId.getType());
+
+        boolean isFigureTypeAvailable = strategies.containsValue(strategy);
+
 
         if (!isFigureTypeAvailable) {
             String error = "no figure of this type available! Accepted types: " + strategies.values().toString();

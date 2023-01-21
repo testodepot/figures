@@ -71,7 +71,6 @@ public class JwtTokenUtil {
         } catch (SignatureException ex) {
             LOGGER.error("Signature validation failed");
         }
-
         return false;
     }
 

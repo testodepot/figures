@@ -31,10 +31,6 @@ public class AbstractFigureWithAreaSquare implements Specification<AbstractFigur
 
         Expression<BigDecimal> squareArea = criteriaBuilder.function("calculateAreaSquare", BigDecimal.class, squareRoot.get("side"));
 
-//        Expression<Number> side = criteriaBuilder.abs(squareRoot.get("side"));
-//
-//        Expression<Number> squareArea = criteriaBuilder.prod(side, side);
-
         if (areaFromSquare != null) {
             Predicate areaSquare = criteriaBuilder.greaterThanOrEqualTo(squareArea, areaFromSquare);
             predicates.add(areaSquare);

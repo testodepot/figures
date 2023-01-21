@@ -3,9 +3,13 @@ package pl.kurs.figures.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.kurs.figures.dto.FigureDto;
 import pl.kurs.figures.dto.RoleDto;
+import pl.kurs.figures.dto.UserDto;
 import pl.kurs.figures.exception.BadEntityException;
+import pl.kurs.figures.model.AbstractFigure;
 import pl.kurs.figures.model.Role;
 import pl.kurs.figures.model.User;
 import pl.kurs.figures.repository.UserRepository;
@@ -14,18 +18,27 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private UserRepository userRepo;
 
-    public UserService(UserRepository userRepo) {
+    private RoleService roleService;
+
+    private PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepo, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
+        this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User add(User userToSave) {
+        userToSave.setPassword(passwordEncoder.encode(userToSave.getPassword()));
+        Role creatorRole = roleService.getRole("CREATOR");
+        userToSave.addRole(creatorRole);
+        userToSave.setCreatedFigures(new HashSet<>());
         return userRepo.save(Optional.ofNullable(userToSave)
                 .filter(x -> Objects.isNull(x.getId()))
                 .orElseThrow(() -> new BadEntityException("User")));
@@ -47,18 +60,46 @@ public class UserService {
     }
 
 
-    public Set<RoleDto> getRoleDtoSet(User savedUser) {
-        return savedUser.getRoles().stream()
-                .map(role -> new RoleDto(role.getId(), role.getName()))
-                .collect(Collectors.toSet());
+    public Page<UserDto> mapPageUsersToDto(Page<User> users) {
+        return users.map(user -> {
+            UserDto dto = new UserDto();
+            Set<FigureDto> createdFiguresDto = new HashSet<>();
+            Set<RoleDto> roleDtoSet = new HashSet<>();
+            Set<Role> roleSet = user.getRoles();
+            Set<AbstractFigure> createdFigures = user.getCreatedFigures();
+            for (AbstractFigure f : createdFigures) {
+                fulfillSetWithDtos(createdFiguresDto, f);
+            }
+            for (Role r : roleSet) {
+                RoleDto roleDto = new RoleDto();
+                roleDto.setId(r.getId());
+                roleDto.setName(r.getName());
+                roleDtoSet.add(roleDto);
+            }
+            dto.setRoles(roleDtoSet);
+            dto.setCreatedFigures(createdFiguresDto);
+            dto.setId(user.getId());
+            dto.setAmountOfCreatedFigures(dto.getCreatedFigures().size());
+            return dto;
+        });
     }
 
-
-    public void prepareUserToSave(User userToSave, Role role) {
-        userToSave.addRole(role);
-        userToSave.setCreatedFigures(new HashSet<>());
+    private void fulfillSetWithDtos(Set<FigureDto> emptyFiguresDto, AbstractFigure f) {
+        FigureDto dto = new FigureDto();
+        dto.setId(f.getId());
+        dto.setType(f.getType());
+        dto.setVersion(f.getVersion());
+        dto.setCreatedBy(f.getCreatedBy().getLogin());
+        dto.setCreatedAt(f.getCreatedAt());
+        dto.setLastModifiedAt(f.getLastModifiedAt());
+        dto.setLastModifiedBy(f.getLastModifiedBy());
+        dto.setPerimeter(f.calculatePerimeterForFigure().doubleValue());
+        dto.setArea(f.calculateAreaForFigure().doubleValue());
+        emptyFiguresDto.add(dto);
     }
 
-    public Page<User> findAllUsers(Pageable pageable) {return userRepo.findAll(pageable);}
+    public Page<User> findAllUsers(Pageable pageable) {
+        return userRepo.findAll(pageable);
+    }
 
 }

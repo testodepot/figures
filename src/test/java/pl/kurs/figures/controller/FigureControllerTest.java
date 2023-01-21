@@ -296,7 +296,7 @@ public class FigureControllerTest {
         Mockito.when(creatingStrategyFactory.getStrategies()).thenReturn(strategies);
         Mockito.when(creatingStrategyFactory.findStrategy(ArgumentMatchers.isA(String.class))).thenReturn(creatingStrategyCircle);
         Mockito.when(abstractFigureServiceMock.getById(ArgumentMatchers.isA(Long.class))).thenReturn(circle);
-        Mockito.when(abstractFigureServiceMock.editObject(ArgumentMatchers.isA(EditFigureCommand.class))).thenReturn(editedCircle);
+        Mockito.when(abstractFigureServiceMock.createEditedFigure(ArgumentMatchers.isA(EditFigureCommand.class))).thenReturn(editedCircle);
         Mockito.when(abstractFigureServiceMock.edit(ArgumentMatchers.isA(AbstractFigure.class))).thenReturn(editedCircle);
 
 
@@ -366,7 +366,7 @@ public class FigureControllerTest {
         Mockito.when(creatingStrategyFactory.getStrategies()).thenReturn(strategies);
         Mockito.when(creatingStrategyFactory.findStrategy(ArgumentMatchers.isA(String.class))).thenReturn(creatingStrategyCircle);
         Mockito.when(abstractFigureServiceMock.getById(ArgumentMatchers.isA(Long.class))).thenReturn(circle);
-        Mockito.when(abstractFigureServiceMock.editObject(ArgumentMatchers.isA(EditFigureCommand.class))).thenReturn(editedCircle);
+        Mockito.when(abstractFigureServiceMock.createEditedFigure(ArgumentMatchers.isA(EditFigureCommand.class))).thenReturn(editedCircle);
         Mockito.when(abstractFigureServiceMock.edit(ArgumentMatchers.isA(AbstractFigure.class))).thenReturn(editedCircle);
 
 
@@ -435,7 +435,7 @@ public class FigureControllerTest {
         Mockito.when(creatingStrategyFactory.getStrategies()).thenReturn(strategies);
         Mockito.when(creatingStrategyFactory.findStrategy(ArgumentMatchers.isA(String.class))).thenReturn(creatingStrategyCircle);
         Mockito.when(abstractFigureServiceMock.getById(ArgumentMatchers.isA(Long.class))).thenReturn(circle);
-        Mockito.when(abstractFigureServiceMock.editObject(ArgumentMatchers.isA(EditFigureCommand.class))).thenReturn(editedCircle);
+        Mockito.when(abstractFigureServiceMock.createEditedFigure(ArgumentMatchers.isA(EditFigureCommand.class))).thenReturn(editedCircle);
         Mockito.when(abstractFigureServiceMock.edit(ArgumentMatchers.isA(AbstractFigure.class))).thenReturn(editedCircle);
 
 

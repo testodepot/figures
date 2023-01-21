@@ -13,8 +13,7 @@ public class Config implements WebMvcConfigurer {
 
     @Bean
     public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper;
+        return new ModelMapper();
     }
 
     @Bean

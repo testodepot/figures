@@ -18,9 +18,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.kurs.figures.model.Role;
 import pl.kurs.figures.model.User;
-import pl.kurs.figures.repository.AbstractFigureBaseRepository;
-import pl.kurs.figures.service.AbstractFigureService;
-import pl.kurs.figures.service.ObjectMaker;
 import pl.kurs.figures.utils.JwtTokenUtil;
 
 import javax.transaction.Transactional;
@@ -36,17 +33,6 @@ public class FigureControllerSearchMethodTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private AbstractFigureService abstractFigureService;
-
-
-    @Autowired
-    private AbstractFigureBaseRepository abstractFigureBaseRepository;
-
-
-    @Autowired
-    private ObjectMaker objectMaker;
-
     @Mock
     private Authentication auth;
 
@@ -60,12 +46,12 @@ public class FigureControllerSearchMethodTest {
     @Autowired
     private AuthenticationManager authManager;
 
+
     @BeforeEach
     public void setUp() {
-        Mockito.when(auth.getName()).thenReturn("adam123");
+        Mockito.when(auth.getName()).thenReturn("admin");
         SecurityContextHolder.getContext().setAuthentication(auth);
-        abstractFigureService = new AbstractFigureService(abstractFigureBaseRepository, objectMaker);
-        User dummy = new User("adam", "kocik", "adam123", "123");
+        User dummy = new User("Admin", "Adminowski", "admin", "admin123");
         token = jwtUtil.generateAccessToken(dummy);
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(
                 dummy.getLogin(), dummy.getPassword()));

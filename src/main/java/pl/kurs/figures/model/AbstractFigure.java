@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
@@ -31,7 +30,7 @@ public abstract class AbstractFigure implements Serializable {
     private String type;
 
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = NOT_AUDITED)
     private User createdBy;
 
@@ -69,16 +68,9 @@ public abstract class AbstractFigure implements Serializable {
     }
 
 
-    public abstract BigDecimal calculateAreaForFigure(List<BigDecimal> params);
+    public abstract BigDecimal calculateAreaForFigure();
 
-    public abstract BigDecimal calculatePerimeterForFigure(List<BigDecimal> params);
-
-    public abstract BigDecimal calculateAreaForFigureDto(AbstractFigure figure);
-
-    public abstract BigDecimal calculatePerimeterForFigureDto(AbstractFigure figure);
-
-    @PostLoad
-    public abstract void postLoad();
+    public abstract BigDecimal calculatePerimeterForFigure();
 
     public BigDecimal getArea() {
         return area;
@@ -119,7 +111,6 @@ public abstract class AbstractFigure implements Serializable {
     public void setVersion(Long version) {
         this.version = version;
     }
-
 
     public User getCreatedBy() {
         return createdBy;

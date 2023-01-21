@@ -45,7 +45,7 @@ public class AuthControllerTest {
 
     @BeforeEach
     public void setUp() {
-        User dummy = new User("adam", "kocik", "adam123", "123");
+        User dummy = new User("Admin", "Adminowski", "admin", "admin123");
         token = jwtTokenUtil.generateAccessToken(dummy);
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(
                 dummy.getLogin(), dummy.getPassword()));
@@ -61,8 +61,8 @@ public class AuthControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders
                 .post("/auth/login")
                 .content("{\n" +
-                        "  \"login\": \"adam123\",\n" +
-                        "  \"password\": \"123\"\n" +
+                        "  \"login\": \"admin\",\n" +
+                        "  \"password\": \"admin123\"\n" +
                         "}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(mvcResult -> System.out.println(mvcResult.getResponse().getContentAsString()))
