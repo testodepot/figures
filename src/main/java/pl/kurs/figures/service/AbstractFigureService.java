@@ -15,7 +15,6 @@ import pl.kurs.figures.model.AbstractFigure;
 import pl.kurs.figures.model.User;
 import pl.kurs.figures.repository.AbstractFigureBaseRepository;
 import pl.kurs.figures.specs.*;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,8 @@ import java.util.Optional;
 
 @Service(value = "abstractFigureService")
 public class AbstractFigureService {
+
+    //ssdasdasdasasddasads
 
     private AbstractFigureBaseRepository repository;
 

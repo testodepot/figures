@@ -10,7 +10,6 @@ import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.strategy.CreateRectangle;
 import pl.kurs.figures.strategy.CreatingStrategy;
 import pl.kurs.figures.strategy.CreatingStrategyFactory;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

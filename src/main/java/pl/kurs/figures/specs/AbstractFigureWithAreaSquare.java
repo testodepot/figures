@@ -4,7 +4,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 import pl.kurs.figures.model.AbstractFigure;
 import pl.kurs.figures.model.Square;
-
 import javax.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;

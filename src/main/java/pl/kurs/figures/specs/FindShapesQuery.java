@@ -2,7 +2,6 @@ package pl.kurs.figures.specs;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
-
 import java.math.BigDecimal;
 
 public class FindShapesQuery {

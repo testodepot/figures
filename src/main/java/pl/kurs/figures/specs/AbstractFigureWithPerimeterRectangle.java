@@ -3,13 +3,13 @@ package pl.kurs.figures.specs;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 import pl.kurs.figures.model.AbstractFigure;
-import pl.kurs.figures.model.Square;
+import pl.kurs.figures.model.Rectangle;
 import javax.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AbstractFigureWithPerimeterSquare implements Specification<AbstractFigure> {
+public class AbstractFigureWithPerimeterRectangle implements Specification<AbstractFigure> {
 
     @Nullable
     private BigDecimal perimeterFrom;
@@ -17,27 +17,30 @@ public class AbstractFigureWithPerimeterSquare implements Specification<Abstract
     @Nullable
     private BigDecimal perimeterTo;
 
-    public AbstractFigureWithPerimeterSquare(@Nullable BigDecimal perimeterFrom, @Nullable BigDecimal perimeterTo) {
+    public AbstractFigureWithPerimeterRectangle(@Nullable BigDecimal perimeterFrom, @Nullable BigDecimal perimeterTo) {
         this.perimeterFrom = perimeterFrom;
         this.perimeterTo = perimeterTo;
     }
+
 
     @Override
     public Predicate toPredicate(Root<AbstractFigure> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
 
-        Root<Square> squareRoot = criteriaBuilder.treat(root, Square.class);
-        Expression<BigDecimal> squarePerimeter = criteriaBuilder.function("calculatePerimeterSquare", BigDecimal.class, squareRoot.get("side"));
+        Root<Rectangle> rectangleRoot = criteriaBuilder.treat(root, Rectangle.class);
 
-        if (perimeterFrom != null) {
-            Predicate area = criteriaBuilder.greaterThanOrEqualTo(squarePerimeter, perimeterFrom);
-            predicates.add(area);
-        }
+        Expression<BigDecimal> perimeterRectangle = criteriaBuilder.function("calculatePerimeterRectangle", BigDecimal.class, rectangleRoot.get("width"), rectangleRoot.get("length"));
 
         if (perimeterTo != null) {
-            Predicate areaTo = criteriaBuilder.lessThanOrEqualTo(squarePerimeter, perimeterTo);
-            predicates.add(areaTo);
+            Predicate perimeterRectangleTo = criteriaBuilder.lessThanOrEqualTo(perimeterRectangle, perimeterTo);
+            predicates.add(perimeterRectangleTo);
         }
+
+        if (perimeterFrom != null) {
+            Predicate perimeterRectangleFrom = criteriaBuilder.greaterThanOrEqualTo(perimeterRectangle, perimeterFrom);
+            predicates.add(perimeterRectangleFrom);
+        }
+
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 

@@ -1,0 +1,159 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <changeSet author="MK (generated)" id="CreateAbstractFigureTable">
+        <createTable tableName="abstract_figure">
+            <column name="type" type="VARCHAR(31)">
+                <constraints nullable="false"/>
+            </column>
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="created_at" type="datetime"/>
+            <column name="last_modified_at" type="datetime"/>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="version" type="BIGINT"/>
+            <column name="radius" type="DECIMAL(19, 2)"/>
+            <column name="length" type="DECIMAL(19, 2)"/>
+            <column name="width" type="DECIMAL(19, 2)"/>
+            <column name="side" type="DECIMAL(19, 2)"/>
+            <column name="created_by_id" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="MK (generated)" id="createAbstractFigureAudTable">
+        <createTable tableName="abstract_figure_aud">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="rev" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="type" type="VARCHAR(31)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revtype" type="TINYINT(3)"/>
+            <column name="created_at" type="datetime"/>
+            <column name="last_modified_at" type="datetime"/>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="created_by_id" type="INT"/>
+            <column name="side" type="DECIMAL(19, 2)"/>
+            <column name="radius" type="DECIMAL(19, 2)"/>
+            <column name="length" type="DECIMAL(19, 2)"/>
+            <column name="width" type="DECIMAL(19, 2)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="MK (generated)" id="createRevInfoTable">
+        <createTable tableName="revinfo">
+            <column autoIncrement="true" name="rev" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="revtstmp" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="MK (generated)" id="createRoleTable">
+        <createTable tableName="roles">
+            <column autoIncrement="true" name="role_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="MK (generated)" id="createUserTable">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="login" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="MK (generated)" id="createUserCreatedFiguresTable">
+        <createTable tableName="users_created_figures">
+            <column name="user_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="figure_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="MK (generated)" id="CreateUserRolesTable">
+        <createTable tableName="users_roles">
+            <column name="user_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="role_id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="MK (generated)" id="revIdForAbstractFigureAud">
+        <createIndex indexName="FKbsa25vd82w0mtkgo6287gpvre" tableName="abstract_figure_aud">
+            <column name="rev"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="MK (generated)" id="roleIdForUserRoles">
+        <createIndex indexName="FKj6m8fwv7oqv74fcehir1a9ffy" tableName="users_roles">
+            <column name="role_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="MK (generated)" id="userIdForAbstractFigure">
+        <createIndex indexName="FKkd3gobmpv8wm0svu5gee78bc9" tableName="abstract_figure">
+            <column name="created_by_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="MK (generated)" id="addConstraintUserId">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="users_roles" constraintName="FK2o0jvgh89lemvvo17cbqvdxaa" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="MK (generated)" id="addConstraintRevNumber">
+        <addForeignKeyConstraint baseColumnNames="rev" baseTableName="abstract_figure_aud" constraintName="FKbsa25vd82w0mtkgo6287gpvre" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="rev" referencedTableName="revinfo" validate="true"/>
+    </changeSet>
+    <changeSet author="MK (generated)" id="addConstraintFigureId">
+        <addForeignKeyConstraint baseColumnNames="figure_id" baseTableName="users_created_figures" constraintName="FKg26y6qltvxlym8prdw3lp8eeb" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="abstract_figure" validate="true"/>
+    </changeSet>
+    <changeSet author="MK (generated)" id="addConstraintRoleId">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="users_roles" constraintName="FKj6m8fwv7oqv74fcehir1a9ffy" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="role_id" referencedTableName="roles" validate="true"/>
+    </changeSet>
+    <changeSet author="MK (generated)" id="addConstraintUserCreatedBy">
+        <addForeignKeyConstraint baseColumnNames="created_by_id" baseTableName="abstract_figure" constraintName="FKkd3gobmpv8wm0svu5gee78bc9" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="MK (generated)" id="addConstraintCreatorUserId">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="users_created_figures" constraintName="FKou842mb6pqm7dq5pxf9cgpib3" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet id="addBasicRoles" author="MK (generated)">
+        <insert tableName="roles">
+            <column name="role_id" value="1"/>
+            <column name="name" value="CREATOR"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="role_id" value="2"/>
+            <column name="name" value="ADMIN"/>
+        </insert>
+    </changeSet>
+    <changeSet id="addAdminAccount" author="MK (generated)">
+        <insert tableName="users">
+            <column name="id" value="1"/>
+            <column name="login" value="admin"/>
+            <column name="name" value="Admin"/>
+            <column name="password" value="$2a$10$eTDtwls8Mh1lRJZg/04p9uZ/rT.0l2AQ6w255qnV6ClQlZx2ZICCq"/>
+            <column name="surname" value="Adminowski"/>
+        </insert>
+        <insert tableName="users_roles">
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="2"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

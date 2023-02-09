@@ -6,7 +6,6 @@ import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.model.AbstractFigure;
 import pl.kurs.figures.strategy.CreatingStrategy;
 import pl.kurs.figures.strategy.CreatingStrategyFactory;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -24,12 +23,12 @@ public class ObjectMaker {
     public AbstractFigure makeObject(CreateFigureCommand createFigureCommand) {
         String figureType = StringUtils.capitalize(createFigureCommand.getType());
         CreatingStrategy creatingStrategy = creatingStrategyFactory.findStrategy(figureType);
-        return creatingStrategy.createFigure(StringUtils.capitalize(createFigureCommand.getType()), createFigureCommand.getParameters());
+        return creatingStrategy.createFigure(createFigureCommand.getParameters());
     }
 
     public AbstractFigure makeObjectWithTypeAndParams(String type, List<BigDecimal> params) {
         CreatingStrategy creatingStrategy = creatingStrategyFactory.findStrategy(type);
-        return creatingStrategy.createFigure(type, params);
+        return creatingStrategy.createFigure(params);
     }
 
 }

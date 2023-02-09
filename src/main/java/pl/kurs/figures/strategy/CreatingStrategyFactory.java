@@ -1,7 +1,6 @@
 package pl.kurs.figures.strategy;
 
 import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

@@ -11,7 +11,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import pl.kurs.figures.model.Role;
 import pl.kurs.figures.model.User;
 import pl.kurs.figures.utils.JwtTokenUtil;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

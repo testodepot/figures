@@ -16,7 +16,6 @@ import pl.kurs.figures.model.AbstractFigure;
 import pl.kurs.figures.model.Circle;
 import pl.kurs.figures.model.Role;
 import pl.kurs.figures.model.User;
-
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -77,6 +76,5 @@ public class AbstractFigureBaseRepositoryRevisionTest {
 
         assertEquals(1, revisions.size());
         abstractFigureBaseRepository.deleteById(circle.getId());
-        userRepository.deleteById(circle.getCreatedBy().getId());
     }
 }

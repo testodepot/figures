@@ -21,7 +21,6 @@ import pl.kurs.figures.model.Square;
 import pl.kurs.figures.model.User;
 import pl.kurs.figures.repository.AbstractFigureBaseRepository;
 import pl.kurs.figures.specs.FindShapesQuery;
-
 import java.math.BigDecimal;
 import java.util.*;
 

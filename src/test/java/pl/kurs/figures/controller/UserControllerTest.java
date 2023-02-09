@@ -23,7 +23,6 @@ import pl.kurs.figures.model.Square;
 import pl.kurs.figures.model.User;
 import pl.kurs.figures.service.RoleService;
 import pl.kurs.figures.service.UserService;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,14 +37,11 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-
     @MockBean
     private UserService userService;
 
     @MockBean
     private RoleService roleService;
-
-
 
 
     @Test

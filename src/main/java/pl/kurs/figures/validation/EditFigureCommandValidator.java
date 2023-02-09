@@ -6,7 +6,6 @@ import pl.kurs.figures.model.AbstractFigure;
 import pl.kurs.figures.service.AbstractFigureService;
 import pl.kurs.figures.strategy.CreatingStrategy;
 import pl.kurs.figures.strategy.CreatingStrategyFactory;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Map;

@@ -30,7 +30,7 @@ public abstract class AbstractFigure implements Serializable {
     private String type;
 
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Audited(targetAuditMode = NOT_AUDITED)
     private User createdBy;
 

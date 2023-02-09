@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.kurs.figures.model.Role;
 import pl.kurs.figures.model.User;
 import pl.kurs.figures.utils.JwtTokenUtil;
-
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;

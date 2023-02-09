@@ -13,7 +13,6 @@ import pl.kurs.figures.model.AbstractFigure;
 import pl.kurs.figures.model.Role;
 import pl.kurs.figures.model.User;
 import pl.kurs.figures.repository.UserRepository;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -76,9 +75,11 @@ public class UserService {
                 roleDto.setName(r.getName());
                 roleDtoSet.add(roleDto);
             }
+            dto.setId(user.getId());
+            dto.setLogin(user.getLogin());
+            dto.setPassword(user.getPassword());
             dto.setRoles(roleDtoSet);
             dto.setCreatedFigures(createdFiguresDto);
-            dto.setId(user.getId());
             dto.setAmountOfCreatedFigures(dto.getCreatedFigures().size());
             return dto;
         });

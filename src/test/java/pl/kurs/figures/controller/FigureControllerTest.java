@@ -22,7 +22,6 @@ import pl.kurs.figures.service.AbstractFigureService;
 import pl.kurs.figures.service.UserService;
 import pl.kurs.figures.strategy.*;
 import pl.kurs.figures.utils.JwtTokenUtil;
-
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.HashMap;

@@ -1,7 +1,6 @@
 package pl.kurs.figures.model;
 
 import org.hibernate.envers.Audited;
-
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.math.BigDecimal;

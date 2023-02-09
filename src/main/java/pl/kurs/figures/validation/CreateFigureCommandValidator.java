@@ -41,9 +41,7 @@ public class CreateFigureCommandValidator implements ConstraintValidator<CreateC
             return false;
         }
 
-        int counter = strategy.getNumberOfParamsOfSpecificFigure();
-
-        if (obj.getParameters().size() != counter) {
+        if (obj.getParameters().size() != strategy.getNumberOfParamsOfSpecificFigure()) {
             String error = "wrong number of params for this figure type: " + obj.getType();
             HibernateConstraintValidatorContext hibernateContext = constraintValidatorContext.unwrap(HibernateConstraintValidatorContext.class);
             hibernateContext.disableDefaultConstraintViolation();
